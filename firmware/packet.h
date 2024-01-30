@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "firmware.h"
 #include "network.h"
+#include "Adafruit_VL53L0X.h"
 
 #define PACKET_SIZE 64
 extern char in_buffer[PACKET_SIZE];
@@ -11,6 +12,7 @@ extern char out_buffer[PACKET_SIZE];
 // steering_requested differs from steering in that it is synchronized to steering_measured
 extern float steering_requested;
 extern float steering_measured;
+extern VL53L0X_RangingMeasurementData_t measure;
 
 extern uint32_t current_seq_no;
 // params
@@ -38,6 +40,7 @@ typedef struct {
     struct {
       float steering_requested; // in rad
       float steering_measured;  // in rad
+      uint16_t tof_measured;
     };
     // type 3.0, Parameter Packet
     struct {

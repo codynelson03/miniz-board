@@ -70,7 +70,6 @@ void parseCommandPacket(){
   Packet *p = (Packet *) in_buffer;
   steering = p->steering;
   throttle = p->throttle;
-
   buildSensorResponsePacket();
   sendResponsePacket();
 }
@@ -103,6 +102,7 @@ void buildSensorResponsePacket(){
   Packet *p = (Packet *) out_buffer;
   p->steering_requested = steering_requested;
   p->steering_measured = steering_measured;
+  p->tof_measured = measure.RangeMilliMeter;
 }
 
 void buildHeader(uint8_t type, uint8_t subtype){

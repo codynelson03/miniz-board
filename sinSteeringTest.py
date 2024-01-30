@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 
 class SinSteeringTest(PrintObject):
     def __init__(self,T):
-        self.car = Offboard("192.168.0.11",2390)
+        self.car = Offboard("192.168.10.12",2390)
         self.T = T
         return
 
     def main(self):
         try:
             throttle = 0.35
-            self.car.setParam(400.0,0,10)
+            self.car.setParam(400.0,0,40)
             t0 = time()
             dt = 1.5
             while time() < t0 + dt:
@@ -31,7 +31,7 @@ class SinSteeringTest(PrintObject):
             self.car.steering_requested_vec = []
             self.car.steering_measured_vec = []
 
-            self.car.setParam(400.0,0,40)
+            self.car.setParam(400.0,0,50)
             t0 = time()
 
             while time() < t0 + dt:

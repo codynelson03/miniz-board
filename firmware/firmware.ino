@@ -6,6 +6,7 @@
 #include "network.h"
 #include "packet.h"
 #include "status_light.h"
+#include "Adafruit_VL53L0X.h"
 
 // TODO use SAMD timer interrupt to achieve higher control frequency
 
@@ -44,6 +45,9 @@ float steering_integral_limit = 1.0;
 bool flag_failsafe = false;
 StatusLed led;
 
+Adafruit_VL53L0X lox = Adafruit_VL53L0X();
+VL53L0X_RangingMeasurementData_t measure;
+
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -57,6 +61,10 @@ void setup() {
   led.off();
   setupWifi();
   Udp.begin(localPort);
+  if (!lox.begin()) {
+    Serial.println(F("Failed to boot VL53L0X"));
+    while(1);
+  }
 }
 
 void blinkTwice(){
@@ -125,7 +133,17 @@ void loop() {
     led.blink();
   } 
 
-  actuateControls();
+  actuateControls();   
+      
+  lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
+
+  if (measure.RangeStatus != 4) {  // phase failures have incorrect data
+    Serial.print("Distance (mm): "); Serial.println(measure.RangeMilliMeter);
+  } else {
+    Serial.println(" out of range ");
+  }
+    
+  //delay(5);
 }
 
 
